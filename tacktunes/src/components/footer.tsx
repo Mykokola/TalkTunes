@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const Footer = () => (
-  <footer className="flex  gap-9 pt-32  items-center justify-center">
+  <footer className="container flex  gap-9 pt-32  items-center justify-center">
     <Link href="">
       <svg
         xmlns="http://www.w3.org/2000/svg"

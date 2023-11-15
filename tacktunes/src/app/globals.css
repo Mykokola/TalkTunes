@@ -1,5 +1,4 @@
 @import 'tailwindcss/base';
-@import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -18,7 +17,7 @@
 body {
   color: var(--Dark-Color, #21243D);;
 }
-section {
-  justify-content: center;
+.container  {
   margin: 0 auto;
+  width: 856px;
 }
