@@ -1,22 +1,39 @@
 "use client";
-import { useRef, useEffect, useState, use } from "react";
+import { useRef, useEffect, useState } from "react";
 
 export const AsteroidsGame = () => {
   const [gameStartActive, setgameStartActive] = useState(false);
   const [xVector, setXvector] = useState(0);
-  const [howOffen, sethowOffen] = useState(true);
+  const [howOffen, sethowOffen] = useState<any>(null);
   const [yVector, setYvector] = useState(0);
-  const [intervalUpdater,setIntervalUpdater] = useState()
+  const [gavitationInterval, setGavitationInterval] =
+    useState<NodeJS.Timeout | null>(null);
+  const [spawnInterval, setSpawnInterval] = useState<NodeJS.Timeout | null>(
+    null
+  );
+  const [intervalUpdater, setIntervalUpdater] = useState();
   const [foeGenerator, setFoeGenerator] = useState(1);
   const [foeSpeed, setFoeSpeed] = useState(1);
   const [gravitation, setGravitation] = useState(true);
   const ref = useRef<HTMLCanvasElement | null>(null);
   const [foeArry, setFoeArry] = useState([[1, 0, 30, 30]]);
-  const [updateFoe,setUpdateFoe] = useState(false)
-  const startGame = (event: any) => {
+  const [updateFoe, setUpdateFoe] = useState(false);
+  const startGame =  (event: any) => {
     console.log("Game started");
     document.body.style.overflow = gameStartActive ? "auto" : "hidden";
     setgameStartActive(!gameStartActive);
+    if (!gameStartActive) {
+      document.addEventListener("keydown", eventChecker);
+    } 
+  };
+  const resetGame = () => {
+    if (spawnInterval && gavitationInterval) {
+      clearInterval(spawnInterval);
+      clearInterval(gavitationInterval);
+    }
+    console.log("triger");
+    document.removeEventListener("keydown", eventChecker);
+
   };
   const eventChecker = (event: any) => {
     const canvas: any = ref.current;
@@ -62,9 +79,9 @@ export const AsteroidsGame = () => {
     }
   };
 
-  const spawnFoePlace:any = () => {
+  const spawnFoePlace: any = () => {
     const result = Math.floor(Math.random() * 300) - 30;
-  
+
     for (let i = 0; i < foeArry.length; i++) {
       const existingFoe = foeArry[i];
       const distance = Math.abs(result - existingFoe[0]);
@@ -78,7 +95,6 @@ export const AsteroidsGame = () => {
   };
 
   useEffect(() => {
-    document.addEventListener("keydown", eventChecker);
     let canvas = ref.current;
     let context = canvas?.getContext("2d");
     if (context && canvas?.height) {
@@ -90,40 +106,53 @@ export const AsteroidsGame = () => {
   }, []);
 
   useEffect(() => {
-
     let canvas = ref.current;
     let context = canvas?.getContext("2d");
     if (context && canvas && yVector) {
       context.clearRect(0, 0, canvas.width, canvas.height);
+      foeArry.forEach((e) => {
+        if (
+          e[0] <= xVector &&
+          e[0] + 30 >= xVector &&
+          e[1] <= yVector &&
+          e[1] + 30 >= yVector
+        ) {
+          resetGame()
+        }
+      });
       context.fillRect(xVector, yVector, 15, 15);
     }
     if (gravitation) {
-     let inteval = setInterval(() => {
+      let inteval = setInterval(() => {
         setFoeArry((e: any[]) => {
-          const result:any[] = [...e]
-          for(let i =0;i<e.length;i++){
-            result[i][1] =  result[i][1] + 1
+          const result: any[] = [...e];
+          for (let i = 0; i < e.length; i++) {
+            if (result[i]) {
+              result[i][1] = result[i][1] + 1;
+            }
           }
-          return result
+          return result.filter((e) => e[1] < 300);
         });
-        console.log(foeArry)
 
-        if(foeArry[foeArry.length-1][1]>29&&foeArry[foeArry.length-1][1]<35){
-          clearInterval(inteval)
+        if (
+          foeArry[foeArry.length - 1][1] > 29 &&
+          foeArry[foeArry.length - 1][1] < 35
+        ) {
+          clearInterval(inteval);
           setGravitation(true);
         }
-      }, 80);
+        setGavitationInterval(inteval);
+      }, 2010);
       setGravitation(false);
-    
-      console.log(inteval)
     }
 
-    if(foeArry[foeArry.length-1][1] ===32&&updateFoe===false){
-      setTimeout(()=> {
-            setFoeArry(e =>  [...e,[spawnFoePlace(),0,30,30]])
-      setUpdateFoe(false)
-      },800)
-      setUpdateFoe(true)
+    if (foeArry[foeArry.length - 1][1] === 32 && updateFoe === false) {
+      let interval = setTimeout(() => {
+        setFoeArry((e) => [...e, [spawnFoePlace(), 0, 30, 30]]);
+        setUpdateFoe(false);
+      }, 800);
+      setSpawnInterval(interval);
+      setUpdateFoe(true);
     }
     foeArry.forEach((e) => {
       context?.clearRect(e[0], e[1], e[2], e[3]);
