@@ -1,9 +1,11 @@
 "use client";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback, use } from "react";
 
 export const AsteroidsGame = () => {
   const [gameStartActive, setgameStartActive] = useState(false);
   const [xVector, setXvector] = useState(0);
+  const [retryGame, setRetryGame] = useState(false);
+  const [heroSpeed, setHeroSpeed] = useState(1)
   const [howOffen, sethowOffen] = useState<any>(null);
   const [yVector, setYvector] = useState(0);
   const [gavitationInterval, setGavitationInterval] =
@@ -12,36 +14,57 @@ export const AsteroidsGame = () => {
     null
   );
   const [intervalUpdater, setIntervalUpdater] = useState();
-  const [foeGenerator, setFoeGenerator] = useState(1);
-  const [foeSpeed, setFoeSpeed] = useState(1);
-  const [gravitation, setGravitation] = useState(true);
+  const [foeGenerator, setFoeGenerator] = useState(20);
+  const [foeSpeed, setFoeSpeed] = useState(100);
+
+
+  const [dificalt, setDificalt] =  useState<NodeJS.Timeout | null>(null)
+  const [gravitation, setGravitation] = useState(false);
   const ref = useRef<HTMLCanvasElement | null>(null);
   const [foeArry, setFoeArry] = useState([[1, 0, 30, 30]]);
   const [updateFoe, setUpdateFoe] = useState(false);
-  const startGame =  (event: any) => {
+  const [level,setLevel] = useState(0)
+  const startGame = (event: any) => {
+    setRetryGame(true);
+    setFoeArry([[1, 0, 30, 30]]);
     console.log("Game started");
     document.body.style.overflow = gameStartActive ? "auto" : "hidden";
+    gameStartActive ? setGravitation(false) : setGravitation(true);
+    spawnInterval && clearInterval(spawnInterval);
+    gavitationInterval && clearInterval(gavitationInterval);
     setgameStartActive(!gameStartActive);
     if (!gameStartActive) {
       document.addEventListener("keydown", eventChecker);
-    } 
+    }
+    dificalt && clearInterval(dificalt)
+    const inteval = setInterval(() => {
+      setFoeSpeed(e => e = e - 5)
+      setFoeGenerator(e => e =  e-1)
+      setLevel(e => e +=1)
+
+    },12000)
+    setLevel(0)
+
+    setDificalt(inteval)
+    setUpdateFoe(false);
   };
   const resetGame = () => {
-    if (spawnInterval && gavitationInterval) {
-      clearInterval(spawnInterval);
-      clearInterval(gavitationInterval);
-    }
-    console.log("triger");
-    document.removeEventListener("keydown", eventChecker);
+    setGravitation(false);
+    setUpdateFoe(true);
+    spawnInterval && clearInterval(spawnInterval);
+    gavitationInterval && clearInterval(gavitationInterval);
+    dificalt && clearInterval(dificalt)
+    setLevel(0)
 
+    document.removeEventListener("keydown", eventChecker);
   };
-  const eventChecker = (event: any) => {
+  const eventChecker = useCallback((event: any) => {
     const canvas: any = ref.current;
     switch (event.keyCode) {
       case 40: {
         setYvector((e) => {
           if (canvas.height - 15 > e) {
-            return (e = e + 3);
+            return (e = e + 7);
           }
           return e;
         });
@@ -50,7 +73,7 @@ export const AsteroidsGame = () => {
       case 38: {
         setYvector((e) => {
           if (0 < e) {
-            return (e = e - 3);
+            return (e = e - 7);
           }
           return e;
         });
@@ -59,7 +82,7 @@ export const AsteroidsGame = () => {
       case 37: {
         setXvector((e) => {
           if (0 < e) {
-            return (e = e - 3);
+            return (e = e - 7);
           }
           return e;
         });
@@ -68,7 +91,7 @@ export const AsteroidsGame = () => {
       case 39: {
         setXvector((e) => {
           if (canvas.width - 15 > e) {
-            return (e = e + 3);
+            return (e = e + 7);
           }
           return e;
         });
@@ -77,11 +100,10 @@ export const AsteroidsGame = () => {
       default:
         break;
     }
-  };
+  }, []);
 
   const spawnFoePlace: any = () => {
     const result = Math.floor(Math.random() * 300) - 30;
-
     for (let i = 0; i < foeArry.length; i++) {
       const existingFoe = foeArry[i];
       const distance = Math.abs(result - existingFoe[0]);
@@ -103,7 +125,8 @@ export const AsteroidsGame = () => {
       context.fillRect(canvas?.width / 2 - 10, canvas?.height - 20, 15, 15);
       context.fillStyle = "red";
     }
-  }, []);
+    setRetryGame(false);
+  }, [retryGame]);
 
   useEffect(() => {
     let canvas = ref.current;
@@ -112,12 +135,12 @@ export const AsteroidsGame = () => {
       context.clearRect(0, 0, canvas.width, canvas.height);
       foeArry.forEach((e) => {
         if (
-          e[0] <= xVector &&
+          e[0] - 15 <= xVector &&
           e[0] + 30 >= xVector &&
           e[1] <= yVector &&
           e[1] + 30 >= yVector
         ) {
-          resetGame()
+          resetGame();
         }
       });
       context.fillRect(xVector, yVector, 15, 15);
@@ -131,7 +154,7 @@ export const AsteroidsGame = () => {
               result[i][1] = result[i][1] + 1;
             }
           }
-          return result.filter((e) => e[1] < 300);
+       return result.filter((e) => e[1] < 300);
         });
 
         if (
@@ -142,7 +165,7 @@ export const AsteroidsGame = () => {
           setGravitation(true);
         }
         setGavitationInterval(inteval);
-      }, 2010);
+      }, foeSpeed);
       setGravitation(false);
     }
 
@@ -150,7 +173,7 @@ export const AsteroidsGame = () => {
       let interval = setTimeout(() => {
         setFoeArry((e) => [...e, [spawnFoePlace(), 0, 30, 30]]);
         setUpdateFoe(false);
-      }, 800);
+      }, foeGenerator);
       setSpawnInterval(interval);
       setUpdateFoe(true);
     }
@@ -164,6 +187,7 @@ export const AsteroidsGame = () => {
     <section className="container pt-28 text-2xl">
       <h3 className="  text-center">Asteroids Game</h3>
       <div>
+      <h3>Level:{level}</h3>
         <canvas
           ref={ref}
           className="border-2 border-solid  border-lime-900  ml-auto mr-auto mt-1    w-3/4   h-96"
@@ -174,7 +198,7 @@ export const AsteroidsGame = () => {
         type="button"
         onClick={startGame}
       >
-        {gameStartActive ? "cancle" : "Play"}
+        {gameStartActive ? "Retry" : "Play"}
       </button>
     </section>
   );
