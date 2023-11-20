@@ -1,22 +1,23 @@
 "use client";
-import { useRef, useEffect, useState, useCallback, use } from "react";
+type FoeType = [number, number, number, number];
+import React, { useRef, useEffect, useState, useCallback, use } from "react";
 export const AsteroidsGame = () => {
-  const [gameStartActive, setgameStartActive] = useState(false);
-  const [xVector, setXvector] = useState(0);
-  const [retryGame, setRetryGame] = useState(false);
-  const [yVector, setYvector] = useState(0);
+  const [gameStartActive, setgameStartActive] = useState<boolean>(false);
+  const [xVector, setXvector] = useState<number>(0);
+  const [retryGame, setRetryGame] = useState<boolean>(false);
+  const [yVector, setYvector] = useState<number>(0);
   const [gavitationInterval, setGavitationInterval] =
     useState<NodeJS.Timeout | null>(null);
   const [spawnInterval, setSpawnInterval] = useState<NodeJS.Timeout | null>(
     null
   );
-  const [foeGenerator, setFoeGenerator] = useState(20);
-  const [foeSpeed, setFoeSpeed] = useState(100);
+  const [foeGenerator, setFoeGenerator] = useState<number>(20);
+  const [foeSpeed, setFoeSpeed] = useState<number>(100);
   const [dificalt, setDificalt] = useState<NodeJS.Timeout | null>(null);
   const [gravitation, setGravitation] = useState(false);
   const ref = useRef<HTMLCanvasElement | null>(null);
-  const [foeArry, setFoeArry] = useState([[1, 0, 30, 30]]);
-  const [updateFoe, setUpdateFoe] = useState(false);
+  const [foeArry, setFoeArry] = useState<FoeType[]>([[1, 0, 30, 30]]);
+  const [updateFoe, setUpdateFoe] = useState<boolean>(false);
   const [level, setLevel] = useState(0);
   const startGame = (event: any) => {
     setRetryGame(true);
@@ -47,16 +48,15 @@ export const AsteroidsGame = () => {
     spawnInterval && clearInterval(spawnInterval);
     gavitationInterval && clearInterval(gavitationInterval);
     dificalt && clearInterval(dificalt);
-    setLevel(0);
 
     document.removeEventListener("keydown", eventChecker);
   };
-  const eventChecker = useCallback((event: any) => {
-    const canvas: any = ref.current;
+  const eventChecker = useCallback((event:any) => {
+    const canvas: HTMLCanvasElement|null = ref.current;
     switch (event.keyCode) {
       case 40: {
         setYvector((e) => {
-          if (canvas.height - 15 > e) {
+          if (canvas&&canvas.height - 15 > e) {
             return (e = e + 7);
           }
           return e;
@@ -83,7 +83,7 @@ export const AsteroidsGame = () => {
       }
       case 39: {
         setXvector((e) => {
-          if (canvas.width - 15 > e) {
+          if (canvas&&canvas.width - 15 > e) {
             return (e = e + 7);
           }
           return e;
@@ -95,11 +95,10 @@ export const AsteroidsGame = () => {
     }
   }, []);
 
-  const spawnFoePlace: any = () => {
+  const spawnFoePlace = ():number => {
     const result = Math.floor(Math.random() * 300) - 30;
     for (let i = 0; i < foeArry.length; i++) {
       const existingFoe = foeArry[i];
-      const distance = Math.abs(result - existingFoe[0]);
       if (result + 30 < existingFoe[0] || result > existingFoe[0] + 30) {
         return result;
       } else {
@@ -110,19 +109,19 @@ export const AsteroidsGame = () => {
   };
 
   useEffect(() => {
-    let canvas = ref.current;
-    let context = canvas?.getContext("2d");
-    if (context && canvas?.height) {
-      setXvector(canvas?.width / 2 - 10);
-      setYvector(canvas?.height - 20);
+    const canvas = ref.current;
+    const context = canvas?.getContext("2d");
+    if (context && canvas) {
+      setXvector(canvas.width / 2 - 10);
+      setYvector(canvas.height - 20);
     }
     setRetryGame(false);
   }, [retryGame]);
 
   useEffect(() => {
-    let canvas = ref.current;
-    let context = canvas?.getContext("2d");
-    if (context && canvas && yVector) {
+    const canvas = ref.current;
+    const context = canvas?.getContext("2d");
+    if (context && canvas) {
       context.clearRect(0, 0, canvas.width, canvas.height);
       foeArry.forEach((e) => {
         if (
@@ -131,10 +130,10 @@ export const AsteroidsGame = () => {
           e[1] - 10 <= yVector &&
           e[1] + 25 >= yVector
         ) {
-           resetGame();
+          resetGame();
         }
       });
-      let persone = new Image();
+      const persone:HTMLImageElement = new Image();
       persone.src = "userImg.svg";
       context?.drawImage(persone, xVector, yVector, 15, 15);
     }
@@ -171,8 +170,8 @@ export const AsteroidsGame = () => {
       setUpdateFoe(true);
     }
     foeArry.forEach((e) => {
-      context?.clearRect(e[0], e[1], e[2], e[3]);
-      const image = new Image(); //
+     context?.clearRect(e[0], e[1], e[2], e[3]);
+      const image:HTMLImageElement = new Image(); //
       image.src = "asteroid.svg";
       context?.drawImage(image, e[0], e[1], 35, 35);
     });
@@ -185,7 +184,7 @@ export const AsteroidsGame = () => {
         <h3>Level:{level}</h3>
         <canvas
           ref={ref}
-          className="border-2 border-solid  border-lime-900  ml-auto mr-auto mt-1    w-3/4   h-96"
+          className="border-2   bg-slate-400 border-solid  border-lime-900  ml-auto mr-auto mt-1    w-3/4   h-96"
         ></canvas>
       </div>
       <button
