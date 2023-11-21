@@ -19,7 +19,7 @@ export const AsteroidsGame = () => {
   const [foeArry, setFoeArry] = useState<FoeType[]>([[1, 0, 30, 30]]);
   const [updateFoe, setUpdateFoe] = useState<boolean>(false);
   const [level, setLevel] = useState(0);
-  const startGame = (event: any) => {
+  const startGame = () => {
     setRetryGame(true);
     setFoeArry([[1, 0, 30, 30]]);
     console.log("Game started");
@@ -178,7 +178,7 @@ export const AsteroidsGame = () => {
   }, [xVector, yVector, foeArry]);
 
   return (
-    <section className="container pt-28 text-2xl">
+    <section id="Game" className="container pt-28 text-2xl">
       <h3 className="  text-center">Asteroids Game</h3>
       <div>
         <h3>Level:{level}</h3>

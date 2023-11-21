@@ -2,7 +2,7 @@ import achivs from "@/constants/achievements"
 
 export const Achievements = () => {
 return(
-    <section className=" bg-blue-100 pt-7  pb-8 ">
+    <section id="Achievements" className=" bg-blue-100 pt-7  pb-8 ">
         <div className="container">
         <h3 className=" text-3xl font-normal">Achievements</h3>
         <ul className=" mt-7 flex  gap-4 flex-wrap  justify-center">
