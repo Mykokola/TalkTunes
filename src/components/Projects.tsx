@@ -1,7 +1,7 @@
 import projects from "../constants/projects"
 
 export const Projects = () => {
-    return <section id="Projects" className="container pt-28 pb-28">
+    return <section id="Projects" className="container pt-28 ">
     <h3 className="  text-2xl font-semibold">My Projects</h3>
         <ul className=" gap-7   mt-7">
             {projects.map(({title,text,id,previwe,code}) => {

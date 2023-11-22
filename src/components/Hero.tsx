@@ -18,7 +18,8 @@ a professional team
   src='/nickAvatar.jpeg'
     width={243}
     height={243}
-      alt="Picture of the author"></Image>
+      alt="Picture of the author" 
+      ></Image>
       </div>
     </section>
 )
