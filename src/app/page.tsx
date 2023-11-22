@@ -1,5 +1,4 @@
 import { Hero } from "../components/Hero"
-
 import {Achievements} from "../components/Achievements"
 import { Projects } from "../components/Projects"
 import { AsteroidsGame } from "@/components/AsteroidsGame"
