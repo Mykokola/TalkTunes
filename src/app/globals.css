@@ -1,5 +1,5 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/utilities';
+@import "tailwindcss/base";
+@import "tailwindcss/utilities";
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -15,9 +15,26 @@
 }
 
 body {
-  color: var(--Dark-Color, #21243D);;
+  color: var(--Dark-Color, #21243d);
 }
-.container  {
+.container {
   margin: 0 auto;
   width: 856px;
+}
+.authButton {
+  font-size: 1rem /* 20px */;
+  line-height: 1.75rem /* 28px */;
+  font-weight: 600;
+  padding: 4px 10px;
+  align-items: center;
+  border-radius: 5px;
+}
+.authLabel {
+  display: flex;
+  flex-direction: column;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  color: rgba(142, 143, 153, 1);
 }
