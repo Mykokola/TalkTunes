@@ -29,6 +29,11 @@ body {
   align-items: center;
   border-radius: 5px;
 }
+input {
+  outline: none;
+  color:white;
+  font-size: medium;
+}
 .authLabel {
   display: flex;
   flex-direction: column;
