@@ -4,29 +4,28 @@ axios.defaults.baseURL = "https://teamproject-powerpulse-group4.onrender.com/";
 
 
 const setHeader = (header:any) => {
-    axios.defaults.headers.setHeader = header
+    axios.defaults.headers.common = { Authorization: `Bearer ${header}` };
 }
 
  export const signupFetch = async (body:SignupUser) => {
  const response = await axios
     .post("/identification/signup", body)
     const {data} = response
-
-console.log(data)
+    const {token} = data
+    setHeader(token)
 };
  export const login = async (body:LoginUser) => {
     const response = await axios.post("/identification/login",body)
     const {data} = response
     const {token} = data
-    console.log(token)
     setHeader(token)
  }
  export const currnetUser = async () => {
     const response = await axios.get('/identification/currentUser')
     const {data} = response
-    console.log(data)
+    return data
  }
  export const logOut = async () => {
-    const response = await axios.patch('')
-    console.log(response)
+    const response = await axios.post('/identification/logout')
+    setHeader('')
  }

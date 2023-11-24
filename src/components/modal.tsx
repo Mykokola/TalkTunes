@@ -8,9 +8,11 @@ import { useForm } from "react-hook-form";
 export const ModalAuth = ({
   closeBtn,
   signup,
+  authUser
 }: {
   closeBtn: (event: React.MouseEvent) => void;
   signup: boolean;
+  authUser:any
 }) => {
   const {
     register,
@@ -21,12 +23,14 @@ export const ModalAuth = ({
   const singupBtn = async (body: SignupUser) => {
     await signupFetch(body);
     reset();
+    authUser()
   };
   const loginBtn = async (body: LoginUser) => {
     await login(body);
     reset();
-    await currnetUser()
+    authUser()
   };
+  
   return (
     <div
       onClick={closeBtn}
