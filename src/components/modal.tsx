@@ -1,18 +1,14 @@
-"use client";
-
-import { SignupUser, LoginUser} from "@/interface/auth";
-
-import { currnetUser, login, signupFetch } from "@/utils/auth";
+import { SignupUser, LoginUser } from "@/interface/auth";
+import { login, signupFetch } from "@/utils/auth";
 import { useForm } from "react-hook-form";
-
 export const ModalAuth = ({
   closeBtn,
   signup,
-  authUser
+  authUser,
 }: {
   closeBtn: (event: React.MouseEvent) => void;
   signup: boolean;
-  authUser:any
+  authUser: any;
 }) => {
   const {
     register,
@@ -23,14 +19,14 @@ export const ModalAuth = ({
   const singupBtn = async (body: SignupUser) => {
     await signupFetch(body);
     reset();
-    authUser()
+    authUser();
   };
   const loginBtn = async (body: LoginUser) => {
     await login(body);
     reset();
-    authUser()
+    authUser();
   };
-  
+
   return (
     <div
       onClick={closeBtn}
@@ -40,7 +36,10 @@ export const ModalAuth = ({
         <h2 className=" font-medium text-base text-center text-red-300 mt-4">
           {signup ? "Here you can register" : "Here you can login"}
         </h2>
-        <form onSubmit={handleSubmit(signup?singupBtn:loginBtn)} className="  mt-5 w-full">
+        <form
+          onSubmit={handleSubmit(signup ? singupBtn : loginBtn)}
+          className="  mt-5 w-full"
+        >
           <label className=" mb-2 authLabel">
             Email
             <input
