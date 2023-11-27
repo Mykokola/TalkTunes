@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Heebo } from 'next/font/google'
 import './globals.css'
+
 import { Footer,Header } from '../components/index'
 // Setup the new Howl.
 
@@ -19,11 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className}`}>
+
     <Header></Header>
     <main>
         {children}
         </main>
         <Footer></Footer>
+        
         </body>
     </html>
   )
