@@ -27,7 +27,7 @@ export const Header = () => {
       setSignup(false);
     }
   };
-  const authUser = async () => {
+  const authUser:() => void = async () => {
     setAuth(true);
     setShowModal(false);
     setSignup(false);
@@ -40,7 +40,14 @@ export const Header = () => {
     await logOut();
     setAuth(false);
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    (async () => {
+    const client =  await currnetUser()
+      console.log(client)
+    })()
+
+  }, [
+  ]);
   return (
     <header className="mr-14 container  pt-7  flex items-center justify-between   font-medium  ">
       <nav className="text-xl gap-x-3 flex">
@@ -50,7 +57,7 @@ export const Header = () => {
       </nav>
       <div className=" gap-5 flex">
         {auth ? (
-          <>
+          <div className=" flex gap-2 items-center">
             <p>{useEmail}</p>
             <button
               onClick={logoutUser}
@@ -58,7 +65,7 @@ export const Header = () => {
             >
               Logout
             </button>
-          </>
+          </div>
         ) : (
           <>
             <button

@@ -8,7 +8,7 @@ export const ModalAuth = ({
 }: {
   closeBtn: (event: React.MouseEvent) => void;
   signup: boolean;
-  authUser: any;
+  authUser: () => void;
 }) => {
   const {
     register,
