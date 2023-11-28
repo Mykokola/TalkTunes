@@ -32,22 +32,16 @@ export const Header = () => {
     setShowModal(false);
     setSignup(false);
     document.body.style.overflow = "auto";
-    const { client } = await currnetUser();
+    const {client}  = await currnetUser();
     const { name } = client;
+    console.log(name)
+    
     setUserEmail(name);
   };
   const logoutUser = async () => {
     await logOut();
     setAuth(false);
   };
-  useEffect(() => {
-    (async () => {
-    const client =  await currnetUser()
-      console.log(client)
-    })()
-
-  }, [
-  ]);
   return (
     <header className="mr-14 container  pt-7  flex items-center justify-between   font-medium  ">
       <nav className="text-xl gap-x-3 flex">

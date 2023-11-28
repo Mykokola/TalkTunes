@@ -1,14 +1,20 @@
 import { SignupUser, LoginUser } from "@/interface/auth";
 import axios from "axios";
-axios.defaults.baseURL = "https://teamproject-powerpulse-group4.onrender.com/";
 const baseURL = "https://teamproject-powerpulse-group4.onrender.com/";
 const setHeader = (header: any) => {
-  if (header) {
-    axios.defaults.headers.common = { Authorization: `Bearer ${header}` };
-  } else {
-    delete axios.defaults.headers.common["Authorization"];
-  }
+const token = header
+  return (() => {
+    return token
+  })
 };
+
+export const getToken = () => token;
+export const setToken = (newToken:any) => {
+  token = newToken;
+};
+let token = ''
+console.log(getToken())
+
 
 export const signupFetch = async (body: SignupUser) => {
   const response: any = await fetch(`${baseURL}identification/signup`, {
@@ -19,8 +25,7 @@ export const signupFetch = async (body: SignupUser) => {
     body: JSON.stringify(body),
   });
   const data = await response.json()
-  const { token } = data;
-  setHeader(token);
+  token = data.token
 };
 export const login = async (body: LoginUser) => {
   const response: any = await fetch(`${baseURL}identification/login`, {
@@ -31,18 +36,21 @@ export const login = async (body: LoginUser) => {
    body: JSON.stringify(body),
  });
  const data = await response.json()
-  const { token } = data;
-  setHeader(token);
+ console.log(setHeader(data.token)())
+  token = data.token
+  setToken(token)
 };
 export const currnetUser = async () => {
   const response = await fetch(`${baseURL}identification/currentUser`,
   {
-   headers: {Authorization: 'Bearer {token}'}
+   headers: {Authorization: `Bearer ${getToken()}`}
   })
   const data  =  await response.json();
   return data;
 };
 export const logOut = async () => {
-  const response = await axios.post("/identification/logout");
+const response = await fetch(`${baseURL}identification/logout`,  {
+  headers: {Authorization: `Bearer ${token}`}
+ })
   setHeader("");
 };
