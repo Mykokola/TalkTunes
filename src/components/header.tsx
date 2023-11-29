@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { ModalAuth } from "@/components/modal";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { currnetUser, logOut } from "@/utils/auth";
 export const Header = () => {
   const [signup, setSignup] = useState(false);
