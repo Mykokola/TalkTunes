@@ -6,12 +6,10 @@ import { AsteroidsGame } from "@/components/AsteroidsGame"
 export default function Home() {
   return (
     <>
-
     <Hero></Hero>
     <Achievements></Achievements>
     <AsteroidsGame></AsteroidsGame>
     <Projects></Projects>
-
  </>
   )
 }
